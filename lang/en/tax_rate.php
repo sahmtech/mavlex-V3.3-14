@@ -27,6 +27,8 @@ return [
     'tax_groups' => 'Tax groups',
     'edit_tax_group' => 'Edit tax group',
     'sub_taxes' => 'Sub taxes',
-    'can_not_be_deleted' => 'This tax rate belongs to some tax groups'
+    'can_not_be_deleted' => 'This tax rate belongs to some tax groups',
+    'min_amount' => 'Minimum Amount',
+
 
 ];

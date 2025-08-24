@@ -73,5 +73,9 @@ return [
     'shipping_charges' => 'Shipping Charges',
 
     'pending' => 'Pending',
-    'issue_date' => 'Issue Date'
+    'issue_date' => 'Issue Date',
+     'total_before_tax' => 'Total Before Tax',
+    'total_after_tax' => 'Total After Tax',
+    'total_tax' => 'Total Tax',
+
 ];

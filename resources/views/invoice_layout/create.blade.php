@@ -93,6 +93,28 @@
                 </div>
             </div>
 
+
+             <div class="col-sm-6">
+          <div class="form-group">
+              <div class="checkbox">
+                  <label>
+                      {!! Form::checkbox('show_letter_footer', 1, false, [
+                          'class' => 'input-icheck',
+                          'id' => 'show_letter_footer',
+                      ]) !!}
+                      @lang('lang_v1.show_letter_footer')</label>
+              </div>
+          </div>
+      </div>
+      <div class="col-sm-6 letter_footer_input">
+          <div class="form-group">
+              {!! Form::label('letter_footer', __('lang_v1.letter_footer') . ':') !!}
+              {!! Form::file('letter_footer', ['accept' => 'image/*']) !!}
+              {{-- <span class="help-block">@lang('lang_v1.letter_footer_help') <br> @lang('lang_v1.invoice_logo_help', ['max_size' => '1 MB']) <br> @lang('lang_v1.letter_footer_help2')</span> --}}
+          </div>
+      </div>
+
+
             <div class="clearfix"></div>
             <!--Letter Head -->
             <div class="setting-two-grid">
@@ -1218,6 +1240,19 @@
 
     <script type="text/javascript">
         $(document).ready(function() {
+
+             $(document).on('ifChanged', '#show_letter_footer', function() {
+        letter_footer_changed();
+    });
+
+    function letter_footer_changed() {
+        if($('#show_letter_footer').is(":checked")) {
+            $('.letter_footer_input').removeClass('hide');
+        } else {
+            $('.letter_footer_input').addClass('hide');
+        }
+    }
+   
             var select_value = $("#design option:selected").val();
             if (select_value == 'elegant_ar_en') {
                 $(".hidden_en_input").show();

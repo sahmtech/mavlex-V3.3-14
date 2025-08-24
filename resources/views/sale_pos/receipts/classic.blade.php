@@ -580,6 +580,13 @@
 		
 	</div>
 	@endif
+
+	  {{-- @if (!empty($receipt_details->letter_footer))
+        <div class="page-footer">
+            <img id="footer-image" width="100%" src="{{ $receipt_details->letter_footer }}" alt="footer">
+        </div>
+    @endif --}}
+
 </div>
 </div>
 <!-- Currency Exchange Data -->
@@ -623,6 +630,28 @@
 		color: #000000;
 	}
 	
+	 @media print {
+        .invoice-container thead {
+            display: table-header-group !important;
+        }
+
+        tfoot {
+            display: table-footer-group !important;
+        }
+
+        body {
+            margin: 0 !important;
+            width: 100%;
+        }
+
+        .page-footer {
+            width: 100% !important;
+        }
+
+        .page-footer-space {
+            max-height: 60px;
+        }
+    }
 	.qr-code-container {
     text-align: center;
     margin-top: 20px;

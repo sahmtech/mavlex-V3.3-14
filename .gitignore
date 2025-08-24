@@ -73,3 +73,8 @@ Homestead.json
 /.vagrant
 .phpunit.result.cache
 
+vendor/
+node_modules/
+storage/
+
+

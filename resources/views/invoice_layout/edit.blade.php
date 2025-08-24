@@ -11,8 +11,8 @@
         <!-- Sub Menu -->
         <div class="horizontal-scroll">
             <div class="storys-container">
-    @include('layouts.partials.sub_menu.setting', ['link_class' => 'sub-menu-item'])
-</div>
+                @include('layouts.partials.sub_menu.setting', ['link_class' => 'sub-menu-item'])
+            </div>
         </div>
         <div class="setting-card-wrapper">
             <div class="overview-filter">
@@ -52,10 +52,10 @@
                 </div>
                 <div class="form-group">
                     <span class="inline-tooltip">
-                    {!! Form::label('design', __('lang_v1.design') . ':*') !!}
+                        {!! Form::label('design', __('lang_v1.design') . ':*') !!}
                     </span>
                     <span class="inline-tooltip">
-                    @show_tooltip(__('lang_v1.used_for_browser_based_printing'))
+                        @show_tooltip(__('lang_v1.used_for_browser_based_printing'))
                     </span>
                     {!! Form::select('design', $designs, $invoice_layout->design, ['class' => 'form-control']) !!}
                 </div>
@@ -90,6 +90,27 @@
 
             </div>
 
+
+            <div class="col-sm-6 " style="padding: 0px">
+                <div class="setting-two-grid">
+                    <div class="toggle-wrapper" style="display: flex; gap: 10px;">
+                        <label for="show_letter_footer" class="switchBtn">
+                            {!! Form::checkbox('show_letter_footer', 1, $invoice_layout->show_letter_footer, ['id' => 'show_letter_footer']) !!}
+                            <span class="slider"></span>
+                        </label>
+                        <p>@lang('lang_v1.show_letter_footer')</p>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 letter_footer_input">
+                <div class="form-group">
+                    {!! Form::label('letter_footer', __('lang_v1.letter_footer') . ':') !!}
+                    {!! Form::file('letter_footer', ['accept' => 'image/*']) !!}
+                    {{-- <span class="help-block">@lang('lang_v1.letter_footer_help') <br> @lang('lang_v1.invoice_logo_help', ['max_size' => '1 MB']) <br> @lang('lang_v1.letter_footer_help2')</span> --}}
+                </div>
+            </div>
+
             <div class="clearfix"></div>
             <div class="setting-two-grid">
                 <div class="toggle-wrapper" style="display: flex; gap: 10px;">
@@ -108,17 +129,14 @@
                         <span class="inline-tooltip">
                             @show_tooltip(__('lang_v1.letter_head_help'))
                         </span>
-                        @if(!empty($invoice_layout->letter_head))
-                        <div class="mt-2">
-                            <img 
-                                src="{{ upload_asset('uploads/invoice_logos/' . $invoice_layout->letter_head) }}" 
-                                alt="Current Letter Head" 
-                                style="max-height: 150px; display: block;"
-                            >
-                        </div>
-                    @endif
-                                {!! Form::file('letter_head', ['accept' => 'image/*']) !!}
-                                {{-- <span class="help-block">@lang('lang_v1.letter_head_help') <br> @lang('lang_v1.invoice_logo_help', ['max_size' => '1 MB']) <br> @lang('lang_v1.letter_head_help2')</span> --}}
+                        @if (!empty($invoice_layout->letter_head))
+                            <div class="mt-2">
+                                <img src="{{ upload_asset('uploads/invoice_logos/' . $invoice_layout->letter_head) }}"
+                                    alt="Current Letter Head" style="max-height: 150px; display: block;">
+                            </div>
+                        @endif
+                        {!! Form::file('letter_head', ['accept' => 'image/*']) !!}
+                        {{-- <span class="help-block">@lang('lang_v1.letter_head_help') <br> @lang('lang_v1.invoice_logo_help', ['max_size' => '1 MB']) <br> @lang('lang_v1.letter_head_help2')</span> --}}
                     </div>
                 </div>
             </div>
@@ -137,13 +155,14 @@
                         </div>
                     </div>
                     <div class="form-box ">
-                       
+
                         {!! Form::label('logo', __('invoice.invoice_logo') . ':') !!}
                         {!! Form::file('logo', ['accept' => 'image/*']) !!}
-                        @if(!empty($invoice_layout->logo))
-                        <div class="mt-2">
-                             <img src="{{ upload_asset('uploads/invoice_logos/' . $invoice_layout->logo) }}" alt="Current Invoice Logo" style="max-height: 100px; display: block;">
-                        </div>
+                        @if (!empty($invoice_layout->logo))
+                            <div class="mt-2">
+                                <img src="{{ upload_asset('uploads/invoice_logos/' . $invoice_layout->logo) }}"
+                                    alt="Current Invoice Logo" style="max-height: 100px; display: block;">
+                            </div>
                         @endif
                         {{-- <span class="help-block">@lang('lang_v1.invoice_logo_help', ['max_size' => '1 MB'])<br> @lang('lang_v1.invoice_logo_help2')</span> --}}
                     </div>
@@ -1529,10 +1548,51 @@
 
             letterHeadChanged(); // Initial check
         });
+
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const showLetterHeadCheckbox = document.getElementById('show_letter_footer');
+
+            function letterHeadChanged() {
+                if (showLetterHeadCheckbox.checked) {
+                    // document.querySelectorAll('.hide-for-letterhead').forEach(element => {
+                    //     element.classList.add('hide');
+                    // });
+                    document.querySelectorAll('.letter_footer_input').forEach(element => {
+                        element.classList.remove('hide');
+                    });
+                } else {
+                    // document.querySelectorAll('.hide-for-letterhead').forEach(element => {
+                    //     element.classList.remove('hide');
+                    // });
+                    document.querySelectorAll('.letter_footer_input').forEach(element => {
+                        element.classList.add('hide');
+                    });
+                }
+            }
+
+            showLetterHeadCheckbox.addEventListener('change', letterHeadChanged);
+
+            letterHeadChanged(); // Initial check
+        });
     </script>
 
     <script type="text/javascript">
         $(document).ready(function() {
+
+            // $(document).on('ifChanged', '#show_letter_footer', function() {
+            //     letter_footer_changed();
+            // });
+
+            // function letter_footer_changed() {
+            //     if ($('#show_letter_footer').is(":checked")) {
+            //         $('.letter_footer_input').removeClass('hide');
+            //     } else {
+            //         $('.letter_footer_input').addClass('hide');
+            //     }
+            // }
+
             var select_value = $("#design option:selected").val();
             if (select_value == 'elegant_ar_en') {
                 $(".hidden_en_input").show();

@@ -54,8 +54,8 @@ class TaxRate extends Model
         $tax_attributes = null;
         if ($include_attributes) {
             $tax_attributes = collect($result)->mapWithKeys(function ($item) {
-                return [$item->id => ['data-rate' => $item->amount]];
-            })->all();
+                 return [$item->id => ['data-rate' => $item->amount, 'data-min_amount' => $item->min_amount]];
+           })->all();
         }
 
         $output = ['tax_rates' => $tax_rates, 'attributes' => $tax_attributes];
