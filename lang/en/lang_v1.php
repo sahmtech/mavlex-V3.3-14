@@ -1134,6 +1134,11 @@ return [
     'for_tax_group_only_help' => 'If checked, this tax will not be displayed indivisually in dropdowns, only can be added in tax group',
     'exempt' => 'Exempt',
     'tax_exempt_help' => 'Zero percent tax rate will be considered as tax exempt',
+    "min_amount_tax_help" => "Minimum amount for the tax",
+    'show_letter_footer' => 'Show letter footer',
+    'letter_footer' => 'Letter footer',
+    "classic_borderd" => "Classic with borders",
+
     'show_total_in_words' => 'Show total in words',
     'show_in_word_help' => 'php-intl extention need to be enabled',
     'print_on_suspend' => 'Print invoice on suspend',
@@ -1762,13 +1767,13 @@ return [
     'customer_display_instruction' => "For customer display screen to work, make sure it's opened in same browser as POS screen in new tab. And that tab is mirrored to another customer-facing display monitor.",
     'remove' => 'Remove',
     'display_screen_heading_instruction' => 'HTML tags are supported',
-//3.3
-'currency_precision' => 'Currency precision',
+    //3.3
+    'currency_precision' => 'Currency precision',
     'currency_precision_help' => 'Number of digits after decimal point for currency value. Example:0.00 for value 2, 0.000 for value 3, 0.0000 for value 4',
     'quantity_precision' => 'Quantity precision',
     'quantity_precision_help' => 'Number of digits after decimal point for quantity value. Example:0.00 for value 2, 0.000 for value 3, 0.0000 for value 4',
-    
-'selling_price_help_text' => 'Set multiple price for products. Name different price and then update price from "Update Price" or List Products -> Actions -> Add or edit Group prices',
+
+    'selling_price_help_text' => 'Set multiple price for products. Name different price and then update price from "Update Price" or List Products -> Actions -> Add or edit Group prices',
     'update_product_price' => 'Update Price',
     'import_export_product_price' => 'Import Export Product Price',
     'export_product_prices' => 'Export product prices',
@@ -1779,7 +1784,7 @@ return [
     'product_prices_imported_successfully' => 'Product prices imported successfully',
     'price_group_price_type_tooltip' => 'If <b>Fixed</b> - the entered price will be used. If <b>Percentage</b> - price will be that much % of default selling price',
     'dropdown' => 'Dropdown',
-    
+
     // Dashboard Charts - Modern Analytics
     'analytics_overview' => 'Analytics Overview',
     'revenue_growth_rate' => 'Revenue Growth Rate',
@@ -1788,7 +1793,7 @@ return [
     'sales_performance_radar' => 'Sales Performance Metrics',
     'inventory_turnover' => 'Inventory Turnover Rate',
     'peak_sales_hours' => 'Peak Sales Hours',
-    
+
     // Chart Data Labels
     'quantity_sold' => 'Quantity Sold',
     'sales_amount' => 'Sales Amount',
@@ -1796,7 +1801,7 @@ return [
     'sales_by_category' => 'Sales by Category',
     'top_selling_products' => 'Top Selling Products',
     'target' => 'Target',
-    
+
     // Performance Metrics
     'current_performance' => 'Current Performance',
     'industry_average' => 'Industry Average',
@@ -1806,7 +1811,7 @@ return [
     'product_quality' => 'Product Quality',
     'service_speed' => 'Service Speed',
     'innovation' => 'Innovation',
-    
+
     // Time and Status Labels
     'daily_sales' => 'Daily Sales',
     'monthly_performance' => 'Monthly Performance',
@@ -1819,5 +1824,5 @@ return [
     'market_share' => 'Market Share',
     'turnover_rate' => 'Turnover Rate',
     'hours_of_day' => 'Hours of Day',
-    
+
 ];

@@ -1019,6 +1019,12 @@ class TransactionUtil extends Util
                 upload_asset('uploads/invoice_logos/' . $il->letter_head) : null;
         }
 
+         if ($il->show_letter_footer == 1) {
+            $output['letter_footer'] = !empty($il->letter_footer) &&
+                file_exists(public_path('uploads/invoice_logos/' . $il->letter_footer)) ?
+                asset('uploads/invoice_logos/' . $il->letter_footer) : null;
+        }
+
         //Logo
         $output['logo'] = $il->show_logo != 0 && ! empty($il->logo) ? upload_asset('uploads/invoice_logos/' . $il->logo) : false;
 

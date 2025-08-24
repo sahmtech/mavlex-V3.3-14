@@ -7,12 +7,13 @@ use App\Utils\Util;
 use Illuminate\Http\Request;
 use Validator;
 use App\Utils\ModuleUtil;
+
 class InvoiceLayoutController extends Controller
 {
     protected $commonUtil;
     protected $moduleUtil;
 
-    public function __construct(Util $commonUtil , ModuleUtil $moduleUtil)
+    public function __construct(Util $commonUtil, ModuleUtil $moduleUtil)
     {
         $this->commonUtil = $commonUtil;
         $this->moduleUtil = $moduleUtil;
@@ -63,18 +64,88 @@ class InvoiceLayoutController extends Controller
                 'logo' => 'mimes:jpeg,gif,png|1000',
             ]);
 
-            $input = $request->only(['name', 'header_text',
-                'invoice_no_prefix', 'invoice_heading', 'sub_total_label', 'discount_label', 'tax_label', 'total_label', 'highlight_color', 'footer_text', 'invoice_heading_not_paid', 'invoice_heading_paid', 'total_due_label', 'customer_label', 'paid_label', 'sub_heading_line1', 'sub_heading_line2',
-                    'sub_heading_line3', 'sub_heading_line4', 'sub_heading_line5',
-                    'table_product_label', 'table_qty_label', 'table_unit_price_label',
-                    'table_subtotal_label', 'client_id_label', 'date_label', 'quotation_heading', 'quotation_no_prefix', 'design', 'client_tax_label', 'cat_code_label', 'cn_heading', 'cn_no_label', 'cn_amount_label', 'sales_person_label', 'prev_bal_label', 'date_time_format', 'common_settings', 'change_return_label', 'round_off_label', 'qr_code_fields', 'commission_agent_label']);
+            $input = $request->only([
+                'name',
+                'header_text',
+                'invoice_no_prefix',
+                'invoice_heading',
+                'sub_total_label',
+                'discount_label',
+                'tax_label',
+                'total_label',
+                'highlight_color',
+                'footer_text',
+                'invoice_heading_not_paid',
+                'invoice_heading_paid',
+                'total_due_label',
+                'customer_label',
+                'paid_label',
+                'sub_heading_line1',
+                'sub_heading_line2',
+                'sub_heading_line3',
+                'sub_heading_line4',
+                'sub_heading_line5',
+                'table_product_label',
+                'table_qty_label',
+                'table_unit_price_label',
+                'table_subtotal_label',
+                'client_id_label',
+                'date_label',
+                'quotation_heading',
+                'quotation_no_prefix',
+                'design',
+                'client_tax_label',
+                'cat_code_label',
+                'cn_heading',
+                'cn_no_label',
+                'cn_amount_label',
+                'sales_person_label',
+                'prev_bal_label',
+                'date_time_format',
+                'common_settings',
+                'change_return_label',
+                'round_off_label',
+                'qr_code_fields',
+                'commission_agent_label'
+            ]);
 
             $business_id = $request->session()->get('user.business_id');
             $input['business_id'] = $business_id;
 
             //Set value for checkboxes
-            $checkboxes = ['show_business_name', 'show_location_name', 'show_landmark', 'show_city', 'show_state', 'show_country', 'show_zip_code', 'show_mobile_number', 'show_alternate_number', 'show_email', 'show_tax_1', 'show_tax_2', 'show_logo', 'show_barcode', 'show_payments', 'show_customer', 'show_client_id',
-                'show_brand', 'show_sku', 'show_cat_code', 'show_sale_description', 'show_sales_person', 'show_expiry', 'show_lot', 'show_previous_bal', 'show_image', 'show_reward_point', 'show_qr_code', 'show_commission_agent', 'show_letter_head'];
+            $checkboxes = [
+                'show_business_name',
+                'show_location_name',
+                'show_landmark',
+                'show_city',
+                'show_state',
+                'show_country',
+                'show_zip_code',
+                'show_mobile_number',
+                'show_alternate_number',
+                'show_email',
+                'show_tax_1',
+                'show_tax_2',
+                'show_logo',
+                'show_barcode',
+                'show_payments',
+                'show_customer',
+                'show_client_id',
+                'show_brand',
+                'show_sku',
+                'show_cat_code',
+                'show_sale_description',
+                'show_sales_person',
+                'show_expiry',
+                'show_lot',
+                'show_previous_bal',
+                'show_image',
+                'show_reward_point',
+                'show_qr_code',
+                'show_commission_agent',
+                'show_letter_head',
+                'show_letter_footer'
+            ];
             foreach ($checkboxes as $name) {
                 $input[$name] = !empty($request->input($name)) ? 1 : 0;
             }
@@ -89,11 +160,18 @@ class InvoiceLayoutController extends Controller
                 $input['letter_head'] = $letter_head;
             }
 
+
+            $letter_footer = $this->commonUtil->uploadFile($request, 'letter_footer', 'invoice_logos', 'image');
+            if (! empty($letter_footer)) {
+                $input['letter_footer'] = $letter_footer;
+            }
+
+
             if (!empty($request->input('is_default'))) {
                 //get_default
                 $default = InvoiceLayout::where('business_id', $business_id)
-                                ->where('is_default', 1)
-                                ->update(['is_default' => 0 ]);
+                    ->where('is_default', 1)
+                    ->update(['is_default' => 0]);
                 $input['is_default'] = 1;
             }
 
@@ -110,15 +188,17 @@ class InvoiceLayoutController extends Controller
             $input['location_custom_fields'] = !empty($request->input('location_custom_fields')) ? $request->input('location_custom_fields') : null;
 
             InvoiceLayout::create($input);
-            $output = ['success' => 1,
-                            'msg' => __("invoice.layout_added_success")
-                        ];
+            $output = [
+                'success' => 1,
+                'msg' => __("invoice.layout_added_success")
+            ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
-            $output = ['success' => 0,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+            $output = [
+                'success' => 0,
+                'msg' => __("messages.something_went_wrong")
+            ];
         }
 
         return redirect('invoice-schemes')->with('status', $output);
@@ -156,7 +236,7 @@ class InvoiceLayoutController extends Controller
         $designs = $this->getDesigns();
 
         return view('invoice_layout.edit')
-                ->with(compact('invoice_layout', 'designs'));
+            ->with(compact('invoice_layout', 'designs'));
     }
 
     /**
@@ -177,17 +257,83 @@ class InvoiceLayoutController extends Controller
                 'logo' => 'mimes:jpeg,gif,png|1000',
             ]);
 
-            $input = $request->only(['name', 'header_text',
-                'invoice_no_prefix', 'invoice_heading', 'sub_total_label', 'discount_label', 'tax_label', 'total_label', 'highlight_color', 'footer_text', 'invoice_heading_not_paid', 'invoice_heading_paid', 'total_due_label', 'customer_label', 'paid_label', 'sub_heading_line1', 'sub_heading_line2',
-                    'sub_heading_line3', 'sub_heading_line4', 'sub_heading_line5',
-                    'table_product_label', 'table_qty_label', 'table_unit_price_label',
-                    'table_subtotal_label', 'client_id_label', 'date_label', 'quotation_heading', 'quotation_no_prefix', 'design',
-                    'client_tax_label', 'cat_code_label', 'cn_heading', 'cn_no_label', 'cn_amount_label',
-                    'sales_person_label', 'prev_bal_label', 'date_time_format', 'change_return_label', 'round_off_label', 'commission_agent_label']);
+            $input = $request->only([
+                'name',
+                'header_text',
+                'invoice_no_prefix',
+                'invoice_heading',
+                'sub_total_label',
+                'discount_label',
+                'tax_label',
+                'total_label',
+                'highlight_color',
+                'footer_text',
+                'invoice_heading_not_paid',
+                'invoice_heading_paid',
+                'total_due_label',
+                'customer_label',
+                'paid_label',
+                'sub_heading_line1',
+                'sub_heading_line2',
+                'sub_heading_line3',
+                'sub_heading_line4',
+                'sub_heading_line5',
+                'table_product_label',
+                'table_qty_label',
+                'table_unit_price_label',
+                'table_subtotal_label',
+                'client_id_label',
+                'date_label',
+                'quotation_heading',
+                'quotation_no_prefix',
+                'design',
+                'client_tax_label',
+                'cat_code_label',
+                'cn_heading',
+                'cn_no_label',
+                'cn_amount_label',
+                'sales_person_label',
+                'prev_bal_label',
+                'date_time_format',
+                'change_return_label',
+                'round_off_label',
+                'commission_agent_label'
+            ]);
             $business_id = $request->session()->get('user.business_id');
 
-            $checkboxes = ['show_business_name', 'show_location_name', 'show_landmark', 'show_city', 'show_state', 'show_country', 'show_zip_code', 'show_mobile_number', 'show_alternate_number', 'show_email', 'show_tax_1', 'show_tax_2', 'show_logo', 'show_barcode', 'show_payments', 'show_customer', 'show_client_id',
-                'show_brand', 'show_sku', 'show_cat_code', 'show_sale_description', 'show_sales_person', 'show_expiry', 'show_lot', 'show_previous_bal', 'show_image', 'show_reward_point', 'show_qr_code', 'show_commission_agent', 'show_letter_head'];
+            $checkboxes = [
+                'show_business_name',
+                'show_location_name',
+                'show_landmark',
+                'show_city',
+                'show_state',
+                'show_country',
+                'show_zip_code',
+                'show_mobile_number',
+                'show_alternate_number',
+                'show_email',
+                'show_tax_1',
+                'show_tax_2',
+                'show_logo',
+                'show_barcode',
+                'show_payments',
+                'show_customer',
+                'show_client_id',
+                'show_brand',
+                'show_sku',
+                'show_cat_code',
+                'show_sale_description',
+                'show_sales_person',
+                'show_expiry',
+                'show_lot',
+                'show_previous_bal',
+                'show_image',
+                'show_reward_point',
+                'show_qr_code',
+                'show_commission_agent',
+                'show_letter_head',
+                'show_letter_footer'
+            ];
             foreach ($checkboxes as $name) {
                 $input[$name] = !empty($request->input($name)) ? 1 : 0;
             }
@@ -203,11 +349,17 @@ class InvoiceLayoutController extends Controller
                 $input['letter_head'] = $letter_head;
             }
 
+            $letter_footer = $this->commonUtil->uploadFile($request, 'letter_footer', 'invoice_logos', 'image');
+            if (! empty($letter_footer)) {
+                $input['letter_footer'] = $letter_footer;
+            }
+
+
             if (!empty($request->input('is_default'))) {
                 //get_default
                 $default = InvoiceLayout::where('business_id', $business_id)
-                                ->where('is_default', 1)
-                                ->update(['is_default' => 0 ]);
+                    ->where('is_default', 1)
+                    ->update(['is_default' => 0]);
                 $input['is_default'] = 1;
             }
 
@@ -215,7 +367,7 @@ class InvoiceLayoutController extends Controller
             if ($request->has('module_info')) {
                 $input['module_info'] = json_encode($request->input('module_info'));
             }
-            
+
             if (!empty($request->input('table_tax_headings'))) {
                 $input['table_tax_headings'] = json_encode($request->input('table_tax_headings'));
             }
@@ -227,39 +379,43 @@ class InvoiceLayoutController extends Controller
             $input['qr_code_fields'] = !empty($request->input('qr_code_fields')) ? json_encode($request->input('qr_code_fields')) : null;
 
             InvoiceLayout::where('id', $id)
-                        ->where('business_id', $business_id)
-                        ->update($input);
-            $output = ['success' => 1,
-                            'msg' => __("invoice.layout_updated_success")
-                        ];
+                ->where('business_id', $business_id)
+                ->update($input);
+            $output = [
+                'success' => 1,
+                'msg' => __("invoice.layout_updated_success")
+            ];
         } catch (\Exception $e) {
-            \Log::emergency("File:" . $e->getFile(). "Line:" . $e->getLine(). "Message:" . $e->getMessage());
-            
-            $output = ['success' => 0,
-                            'msg' => __("messages.something_went_wrong")
-                        ];
+            // return  $e->getMessage();
+            \Log::emergency("File:" . $e->getFile() . "Line:" . $e->getLine() . "Message:" . $e->getMessage());
+
+            $output = [
+                'success' => 0,
+                'msg' => __("messages.something_went_wrong")
+            ];
         }
 
         return redirect('invoice-schemes')->with('status', $output);
     }
 
     private function getDesigns()
-{
-  
-    $designs = [
-        'classic' => __('lang_v1.classic').' ('.__('lang_v1.for_normal_printer').')',
-        'elegant' => __('lang_v1.elegant').' ('.__('lang_v1.for_normal_printer').')',
-        'detailed' => __('lang_v1.detailed').' ('.__('lang_v1.for_normal_printer').')',
-        'columnize-taxes' => __('lang_v1.columnize_taxes').' ('.__('lang_v1.for_normal_printer').')',
-        'slim' => __('lang_v1.slim').' ('.__('lang_v1.recomended_for_80mm').')',
-        'slim2' => __('lang_v1.slim').' 2 ('.__('lang_v1.recomended_for_58mm').')',
-    ];
+    {
 
-    //Zatca Code
-    if ($this->moduleUtil->isModuleInstalled('Zatca')) {
-        $designs['elegant_ar_en'] = __('zatca::lang.elegant_ar_en') . ' (' . __('lang_v1.for_normal_printer') . ')';
+        $designs = [
+            'classic' => __('lang_v1.classic') . ' (' . __('lang_v1.for_normal_printer') . ')',
+            'classic-borderd' => __('lang_v1.classic_borderd') . ' (' . __('lang_v1.for_normal_printer') . ')',
+            'elegant' => __('lang_v1.elegant') . ' (' . __('lang_v1.for_normal_printer') . ')',
+            'detailed' => __('lang_v1.detailed') . ' (' . __('lang_v1.for_normal_printer') . ')',
+            'columnize-taxes' => __('lang_v1.columnize_taxes') . ' (' . __('lang_v1.for_normal_printer') . ')',
+            'slim' => __('lang_v1.slim') . ' (' . __('lang_v1.recomended_for_80mm') . ')',
+            'slim2' => __('lang_v1.slim') . ' 2 (' . __('lang_v1.recomended_for_58mm') . ')',
+        ];
+
+        //Zatca Code
+        if ($this->moduleUtil->isModuleInstalled('Zatca')) {
+            $designs['elegant_ar_en'] = __('zatca::lang.elegant_ar_en') . ' (' . __('lang_v1.for_normal_printer') . ')';
+        }
+
+        return $designs;
     }
-
-    return $designs;
-}
 }
